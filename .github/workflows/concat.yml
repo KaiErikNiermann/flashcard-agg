@@ -1,0 +1,33 @@
+name: Concatenate Flash Cards and Update Release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  concatenate_and_update_release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Concatenate Flash Cards
+        run: |
+          chmod +x && ./concat.sh
+        working-directory: ${{ github.workspace }}
+
+      - name: Execute Script
+        run: |
+          chmod +x && ./release.sh
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ github.event.repository.releases[0].upload_url }}
+          asset_path: ./release
+          asset_name: asset_name.ext
+          asset_content_type: application/octet-stream
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
