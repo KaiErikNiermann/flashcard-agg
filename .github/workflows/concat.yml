@@ -15,12 +15,12 @@ jobs:
 
       - name: Concatenate Flash Cards
         run: |
-          bash ./concat.sh
+          bash concat.sh
         working-directory: ${{ github.workspace }}
 
       - name: Execute Script
         run: |
-          bash ./release.sh
+          bash release.sh
 
       - name: Upload Release Asset
         uses: actions/upload-release-asset@v1
