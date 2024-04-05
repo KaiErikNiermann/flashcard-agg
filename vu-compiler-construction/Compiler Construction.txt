@@ -1,0 +1,677 @@
+#separator:tab
+#html:true
+Language	A language \(L\) is a subset of some finite set of symbol sequences \(\Sigma^*\) consisting of symbols from some finite set of symbols \(\Sigma\). That is \(L\subseteq\Sigma^*\subseteq\Sigma\) . A symbol in this case just means any character to represent something
+Symbol types	"<span style=""font-weight:600"">Terminal symbols </span>is any symbol in \(L\) that is also in \(\Sigma\), so the set \(L\cap\Sigma\)<br>​<span style=""font-weight:600"">Non-terminal symbols </span>refers to unexpanded sequences so anything in L that’s also in&nbsp;\(\Sigma^*\), so the set&nbsp;\(L\cap\Sigma^*​\)<br><span style=""font-weight:600"">Start symbol </span>is just the most abstract symbol representing any possible expansion"
+Production rule	This is just a rule in the form head → body where head is a more abstract representation of body
+Derivation&nbsp;	This is the process of substituting the head for the body, that is, going from some more abstract representation to a more concrete one
+Sentinel form	Any intermediate strings derived from the start symbol. In which our expression can consist of terminal and/or non-terminal symbols.
+Sentence	A sentinel form consisting of only terminal symbols.
+Token	A key value pair where the key defines the type of the token and the value represents what the token is
+Lexing&nbsp;	Taking token patterns and matching them to some parsed sequence of characters
+Lexeme	"Name given to a string that matches with some pattern denoting a token. For example “if” would match with the pattern if and the lexeme could be… well… <span style=""font-weight:600"">if </span>. Not the best example but I hope it still makes sense."
+Parse tree	A tree representations of the different levels of derivations given some initial expression consisting of some set of symbols.
+Ambiguity&nbsp;	"A grammar G is ambiguous if for some sentence s in a language following some grammar there are <span style=""font-weight:600"">two different parse trees </span>we can derive."
+LL(k) parsing	This refers to top-down parsing going from left → right using left-most derivation and k many look ahead symbols in the grammar for a language
+LR(k) Parsing	This refers to bottom-up parsing going from left → right using right-most derivation and k many look ahead symbols.
+Parse table	A table which implements a parsing algorithm by expressing the next substitution
+"\(\epsilon\)<span style=""font-weight:600"">&nbsp;or $</span>"	Commonly denotes the end of the string or the empty string or nothing
+"<span style=""font-weight: 600;"">First(a)</span>"	"<div>Given an arbitrary production rule&nbsp;\(\alpha\)&nbsp;of&nbsp;\(A\), so \(A\rightarrow \alpha\)&nbsp;.</div>
+<div>If \(\alpha\)&nbsp;can eventually be expanded to some equivalent expression in the form \(t\beta\)&nbsp;where&nbsp;\(\beta\)&nbsp;is a non-terminal and&nbsp;\(t\)&nbsp;is our terminal then <code>t</code> is in the <code>First</code> set of <code>a</code></div>"
+Node	In a CFG Nodes are basic blocks, which represent the maximal linear sequence of instructions with one entry and one exit.
+Edge	Edges in a CFG represent the control flow path.
+Loop terminology	"<ul>
+<li><strong>pre-header -</strong> This is the basic block that comes immediately before the loops basic blocks</li>
+<li><strong>header -</strong> This is the first basic block in the loop, which I think in most cases is basically the loop where you do the conditional jump to either the body or the exit</li>
+<li><strong>body</strong> - The entire basic block or group of basic blocks which forms the body of the loop</li>
+<li><strong>exit</strong> - The exiting node of the looping section, I think, honestly I would double check the llvm loop info docs</li></ul>"
+Dominating relationship	A node d dominates another node n if every path from the entry node has to pass through d to reach node n
+Strictly dominating relationship	A node d strictly dominates n if d ≠ n and d dominates n , basically in the case where d = n its basically just the trivial rule that all nodes dominate themselves.
+Immediate dominator	The immediate dominator of a node n is the node d which is in the dominating set of n that is, its in the set of nodes which dominate n but its the closest node to n so the node with the fewest steps to n
+Post dominator	A node d post dominates a node n if every path from n to the exist passes through d
+Edge classifications	"<ul>
+<li><strong>cross edge -</strong> A cross edge is an edge between two nodes where in the spanning tree neither of these nodes are an ancestor of one another</li>
+<li><strong>retreating edge -</strong> An edge where in the spanning tree we are going from a child node to a parent node</li>
+<li><strong>advancing edge</strong> - Just any edge present in both the CFG and the corresponding spanning tree so the intersection between the two edge sets for the graphs</li>
+<li><strong>back edge</strong> - A retreating edge from some node <code>B</code> → <code>A</code> where node <code>A</code> also dominates node <code>B</code></li></ul>"
+Reducibility	"A control flow graph is reducible if all retreating edges in <span style=""font-weight:600"">any DFS</span> are also back edges. The emphasis here is that its only reducible if for <span style=""font-weight:600"">any spanning tree</span> we create the retreating edges in the corresponding CFG are also back-edges."
+Reducible loop properties	"<ul>
+<li>Single entry point&nbsp;\(d\)</li>
+<li>No jumps to the middle of the loop body</li>
+<li>\(d\)&nbsp;dominates all nodes in the loop</li>
+<li>Back-edge to the header of the loop ( the condition )</li></ul>"
+Intermediate representation	An internal representation a compiler uses, often similar to a programming language, to represent any source language/text parsed by the frontend in the same manner.
+Dependency DAG&nbsp;	A directed acyclic graph to express the dependencies between parsed expressions in a minimal form. That is without any redundant expressions. Essentially its a compressed parse tree in that it expresses the same information but just in a different format and minimally.
+Context analysis	"The main idea behind context analysis is to find out the scope of each variable, that is, if its a <span style=""font-weight:600"">local </span>corresponding to the scope of a function for example, or a <span style=""font-weight:600"">global variable </span>corresponding to the context of the entire program."
+LLVM Components	"LLVM has 3 primary components which include the <span style=""font-weight:600"">LLVM Virtual Instruction Set </span>that is, its implementation of an intermediate representation, a collection of <span style=""font-weight:600"">well-integrated libraries, </span>and a collection of <span style=""font-weight:600"">tools built from the libraries</span>"
+Unlimited registers in LLVM	"<div>This just refers to the fact that LLVM-IR has an unlimited number of virtual ( not tied to any physical architecture ) registers to hold the results of instructions.</div>
+<div>This is a core feature of LLVM-IR.</div>
+<ol>
+<li>When we generate LLVM-IR new registers are create to hold the results of instructions.</li>
+<li>Then when we want to generate the machine code for the target architecture the <strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong>register allocator</strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong> determines the correct mapping from LLVM registers to physical registers.</li></ol>"
+Single Static Assignment	This refers to the fact that in LLVM registers/variables may be assigned only once
+LLVM Module	"LLVM programs follow a <span style=""font-weight:600"">hierarchical structure, </span>the entire program is called a <span style=""font-weight:600"">module </span>and contains things like <span style=""font-weight:600"">global variables, composite types, function declarations, function definitions&nbsp;</span>"
+GEP Instruction&nbsp;	"<div>So the syntax can be expressed as follows</div>
+<pre><code>%1 = getelementptr type, type* %0, i32 idx1, i32 idx2, ...
+</code></pre>
+<div>Formally GEP is explained as nested type-aware pointer arithmetic starting at base address <code>%0</code>.</div>
+<div>Some points to make regarding the syntax</div>
+<ul>
+<li>base address <code>%0</code> must always be a pointer</li>
+<li>the first index <code>idx1</code> always traverses this pointer</li>
+<li>the subsequent indexes are only for array or struct types</li>
+<li>the indices can be constants or local variables and have any integer type</li></ul>"
+Basic Block	A basic block in LLVM is basically the same idea as for a control flow graph, its a sequence of instructions that execute in order. Basic blocks must end with a terminator, which is a specific type of instruction.
+Terminator instruction and some examples	"<div>These are control flow instructions, the main ones being</div>
+<ul>
+<li><code>br</code> - un/conditional branch</li>
+<li><code>ret</code> - function return</li>
+<li><code>indirectbr</code> - indirect branch that is branch based of a pointer value</li>
+<li><code>switch</code> - switch keyword in C</li>
+<li><code>invoke</code> - is a terminator because one way or the other the flow branches either to an exception label or a user specified label, so you still call a function but if it fails or not you branch away</li>
+</ul>
+<div>One thing to note is that the <code>call</code> instruction is <strong>not</strong> a terminator.</div>"
+Optimization Pass	"Optimizations are <span style=""font-weight:600"">code transformations that improve the program</span>. Optimizations occur at <span style=""font-weight:600"">all the stages of the compiler pipeline</span>. They can be separated into <span style=""font-weight:600"">space optimizations</span>, and <span style=""font-weight:600"">time optimizations</span>. Additionally we have to ensure the code transformations are <span style=""font-weight:600"">safe.</span>"
+Function inlining and function cloning	"In function inlining we <span style=""font-weight:600"">replace a function call </span>with the <span style=""font-weight:600"">body of the function. </span>In function cloning we create <span style=""font-weight:600"">specialized versions of functions </span>that are called from <span style=""font-weight:600"">different call sites </span>with <span style=""font-weight:600"">different arguments.</span>"
+Constant folding and propagation	"In constant folding we <span style=""font-weight:600"">evaluate an expression </span>if the <span style=""font-weight:600"">operands are known at compile time </span>(i.e. they are constants). In constant propagation we <span style=""font-weight:600"">replace a variable with a constant </span>if the variable is <span style=""font-weight:600"">known to be constant.</span>"
+Copy propagation and algebraic simplification	"Copy propagation is the <span style=""font-weight:600"">propagation of the RHS. </span>Algebraic simplification is just the <span style=""font-weight:600"">simplification of algebraic expressions </span>for more minimal equivalent forms."
+Common subexpression elimination	In CSE we reuse the value of some expression which is being computed multiple times
+Unreachable and Dead code elimination	"UCE is <span style=""font-weight:600"">eliminating code </span>that is <span style=""font-weight:600"">never executed</span>. DCE is <span style=""font-weight:600"">eliminating code </span>that <span style=""font-weight:600"">has no effect on our program</span>."
+Strength reduction	In strength reduction the main goal is to replace costly operations (e.g. multiplies, divides) with cheaper alternatives (e.g. adds, subs)
+Loop Invariant code motion&nbsp;	"Pulling a code <span style=""font-weight:600"">statement out of a loop </span>it if does <span style=""font-weight:600"">not change during the loop</span>."
+Induction variable elimination	"If there are multiple induction variables (variables that linearly depend on the iterating variable) then we can eliminate the ones used only in the test condition. IVE generally happens <span style=""font-weight:600"">after strength reduction</span>."
+Loop unrolling	"Loop unrolling just means that we <span style=""font-weight:600"">execute the loop body multiple times </span>each iteration to reduce the number of times the loop condition is checked."
+Order to apply optimizations	"<ul>
+<li><strong>simple dependencies -</strong> This is where an optimizations creates an opportunity for another optimizations. Specifically if we apply optimization A we can generally apply optimization B.</li>
+<li><strong>cyclic dependencies -</strong> This is where an optimization creates an opportunity for an optimization which in turn means we can apply the first optimization again and so on. So just a cyclic relationship between different types of optimizations.</li>
+<li><strong>adverse interactions -</strong> This is where an optimization actually <strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong>interferes</strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong> with another optimization.</li></ul>"
+Program point	"A program point is simply a <span style=""font-weight:600"">location point before or after </span>a specific instruction."
+Liveness analysis	LA is a form of backwards analysis where all sets are initially empty, that is we initialize them to \empty. It uses the union ( \cup ) meet operator.
+Copy propagation	<div>Copy Propagation is a form of forward analysis where the start set is initialized to empty and all other sets to <code>all</code> . It uses the intersection (&nbsp;\(\cap\)&nbsp;) meet operator.<br></div>
+Sparse data-flow problem	This refers to the fact that over the CFG most of the instructions with any type of optimization will remain generally unchanged, so to make any significant optimization improvements to our LLVM we need to propagate the changes throughout the entire CFG but this comes at a performance cost to our optimization algorithms.
+Worklist algorithm	"<div>We can use the worklist algorithm to avoid doing unnecessary evaluations thus creating a more efficient iterative algorithm overall. The main aspects of the worklist algorithm are as follows</div>
+<ul>
+<li>We keep a list of instructions we intend to evaluate called the <strong><strong><strong><strong><strong><strong><strong><strong><strong>worklist</strong></strong></strong></strong></strong></strong></strong></strong></strong></li>
+<li>We initialize this list to the set of all instructions</li>
+<li>If <code>out[I]</code> changes after evaluating <code>out[I] = F(in[I])</code> then we add all the successors of <code>I</code> to the worklist</li></ul>"
+def-use chain	For each definition D compute a list of uses that D may reach (without some intervening expression)
+use-def chain&nbsp;	For each use U compute a list of definitions that reach U
+PHI Node	PHI Nodes are a construct that enables SSA form for control flow / loops by allowing us to have a conditional assignment based on which incoming predecessor executed.
+Dominance frontier	"The dominance frontier of an instruction I is the basic block&nbsp;\(B_F\)&nbsp;such that I dominantes <span style=""font-style:italic"">a predecessor of&nbsp;</span>\(B_F\)<span style=""font-style:italic"">&nbsp;</span>but <span style=""font-style:italic"">does not strictly dominate&nbsp;</span>\(B_F\)​"
+"
+
+<div id=""front""><pre>Dominance frontier space requirements</pre></div>
+
+<script>
+	var getResources = [
+		getCSS(""_katex.css"", ""https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css""),
+		getCSS(""_highlight.css"", ""https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/styles/default.min.css""),
+		getScript(""_highlight.js"", ""https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/highlight.min.js""),
+		getScript(""_katex.min.js"", ""https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js""),
+		getScript(""_auto-render.js"", ""https://cdn.jsdelivr.net/gh/Jwrede/Anki-KaTeX-Markdown/auto-render-cdn.js""),
+		getScript(""_markdown-it.min.js"", ""https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.0.4/markdown-it.min.js""),
+                getScript(""_markdown-it-mark.js"",""https://cdn.jsdelivr.net/gh/Jwrede/Anki-KaTeX-Markdown/_markdown-it-mark.js"")
+	];
+        Promise.all(getResources).then(() => getScript(""_mhchem.js"", ""https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/mhchem.min.js"")).then(render).catch(show);
+	
+
+	function getScript(path, altURL) {
+		return new Promise((resolve, reject) => {
+			let script = document.createElement(""script"");
+			script.onload = resolve;
+			script.onerror = function() {
+				let script_online = document.createElement(""script"");
+				script_online.onload = resolve;
+				script_online.onerror = reject;
+				script_online.src = altURL;
+				document.head.appendChild(script_online);
+			}
+			script.src = path;
+			document.head.appendChild(script);
+		})
+	}
+
+	function getCSS(path, altURL) {
+		return new Promise((resolve, reject) => {
+			var css = document.createElement('link');
+			css.setAttribute('rel', 'stylesheet');
+			css.type = 'text/css';
+			css.onload = resolve;
+			css.onerror = function() {
+				var css_online = document.createElement('link');
+				css_online.setAttribute('rel', 'stylesheet');
+				css_online.type = 'text/css';
+				css_online.onload = resolve;
+				css.onerror = reject;
+				css_online.href = altURL;
+				document.head.appendChild(css_online);
+			}
+			css.href = path;
+			document.head.appendChild(css);
+		});
+	}
+
+
+	function render() {
+		renderMath(""front"");
+		markdown(""front"");
+		show();
+	}
+
+	function show() {
+		document.getElementById(""front"").style.visibility = ""visible"";
+	}
+
+	function renderMath(ID) {
+		let text = document.getElementById(ID).innerHTML;
+		text = replaceInString(text);
+		document.getElementById(ID).textContent = text;
+		renderMathInElement(document.getElementById(ID), {
+			delimiters:  [
+  				{left: ""$$"", right: ""$$"", display: true},
+  				{left: ""$"", right: ""$"", display: false}
+			],
+            throwOnError : false
+		});
+	}
+
+	function markdown(ID) {
+		let md = new markdownit({typographer: true, html:true, highlight: function (str, lang) {
+                            if (lang && hljs.getLanguage(lang)) {
+                                try {
+                                    return hljs.highlight(str, { language: lang }).value;
+                                } catch (__) {}
+                            }
+
+                            return ''; // use external default escaping
+                        }}).use(markdownItMark);
+		let text = replaceHTMLElementsInString(document.getElementById(ID).innerHTML);
+		text = md.render(text);
+		document.getElementById(ID).innerHTML = text.replace(/&lt;\/span&gt;/gi,""\\"");
+	}
+	function replaceInString(str) {
+		str = str.replace(/<[\/]?pre[^>]*>/gi, """");
+		str = str.replace(/<br\s*[\/]?[^>]*>/gi, ""\n"");
+		str = str.replace(/<div[^>]*>/gi, ""\n"");
+		// Thanks Graham A!
+		str = str.replace(/<[\/]?span[^>]*>/gi, """")
+		str.replace(/<\/div[^>]*>/g, ""\n"");
+		return replaceHTMLElementsInString(str);
+	}
+
+	function replaceHTMLElementsInString(str) {
+		str = str.replace(/&nbsp;/gi, "" "");
+		str = str.replace(/&tab;/gi, ""	"");
+		str = str.replace(/&gt;/gi, "">"");
+		str = str.replace(/&lt;/gi, ""<"");
+		return str.replace(/&amp;/gi, ""&"");
+	}
+</script>
+"	"<div id=""back""><pre><div>If we consider $N$ definitions of $x$ which may reach $M$ uses of $x$ we can compare the space required for DU chain and SSA form</div>
+<ul>
+<li>DU chain : $M \times N$</li>
+<li>SSA form : $N +M$</li></ul><br></pre></div>
+
+<script>
+	var getResources = [
+		getCSS(""_katex.css"", ""https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css""),
+		getCSS(""_highlight.css"", ""https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/styles/default.min.css""),
+		getScript(""_highlight.js"", ""https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/highlight.min.js""),
+		getScript(""_katex.min.js"", ""https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js""),
+		getScript(""_auto-render.js"", ""https://cdn.jsdelivr.net/gh/Jwrede/Anki-KaTeX-Markdown/auto-render-cdn.js""),
+		getScript(""_markdown-it.min.js"", ""https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.0.4/markdown-it.min.js""),
+		getScript(""_markdown-it-mark.js"",""https://cdn.jsdelivr.net/gh/Jwrede/Anki-KaTeX-Markdown/_markdown-it-mark.js"")
+	];
+        Promise.all(getResources).then(() => getScript(""_mhchem.js"", ""https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/mhchem.min.js"")).then(render).catch(show);
+	
+
+	function getScript(path, altURL) {
+		return new Promise((resolve, reject) => {
+			let script = document.createElement(""script"");
+			script.onload = resolve;
+			script.onerror = function() {
+				let script_online = document.createElement(""script"");
+				script_online.onload = resolve;
+				script_online.onerror = reject;
+				script_online.src = altURL;
+				document.head.appendChild(script_online);
+			}
+			script.src = path;
+			document.head.appendChild(script);
+		})
+	}
+
+	function getCSS(path, altURL) {
+		return new Promise((resolve, reject) => {
+			var css = document.createElement('link');
+			css.setAttribute('rel', 'stylesheet');
+			css.type = 'text/css';
+			css.onload = resolve;
+			css.onerror = function() {
+				var css_online = document.createElement('link');
+				css_online.setAttribute('rel', 'stylesheet');
+				css_online.type = 'text/css';
+				css_online.onload = resolve;
+				css_online.onerror = reject;
+				css_online.href = altURL;
+				document.head.appendChild(css_online);
+			}
+			css.href = path;
+			document.head.appendChild(css);
+		});
+	}
+
+	function render() {
+		renderMath(""front"");
+		markdown(""front"");
+		renderMath(""back"");
+		markdown(""back"");
+		show();
+	}
+
+	function show() {
+		document.getElementById(""front"").style.visibility = ""visible"";
+		document.getElementById(""back"").style.visibility = ""visible"";
+	}
+
+
+	function renderMath(ID) {
+		let text = document.getElementById(ID).innerHTML;
+		text = replaceInString(text);
+		document.getElementById(ID).textContent = text;
+		renderMathInElement(document.getElementById(ID), {
+			delimiters:  [
+  				{left: ""$$"", right: ""$$"", display: true},
+  				{left: ""$"", right: ""$"", display: false}
+			],
+                        throwOnError : false
+		});
+	}
+	function markdown(ID) {
+		let md = new markdownit({typographer: true, html:true, highlight: function (str, lang) {
+                            if (lang && hljs.getLanguage(lang)) {
+                                try {
+                                    return hljs.highlight(str, { language: lang }).value;
+                                } catch (__) {}
+                            }
+
+                            return ''; // use external default escaping
+                        }}).use(markdownItMark);
+		let text = replaceHTMLElementsInString(document.getElementById(ID).innerHTML);
+		text = md.render(text);
+		document.getElementById(ID).innerHTML = text.replace(/&lt;\/span&gt;/gi,""\\"");
+	}
+	function replaceInString(str) {
+		str = str.replace(/<[\/]?pre[^>]*>/gi, """");
+		str = str.replace(/<br\s*[\/]?[^>]*>/gi, ""\n"");
+		str = str.replace(/<div[^>]*>/gi, ""\n"");
+		// Thanks Graham A!
+		str = str.replace(/<[\/]?span[^>]*>/gi, """")
+		str.replace(/<\/div[^>]*>/g, ""\n"");
+		return replaceHTMLElementsInString(str);
+	}
+
+	function replaceHTMLElementsInString(str) {
+		str = str.replace(/&nbsp;/gi, "" "");
+		str = str.replace(/&tab;/gi, ""	"");
+		str = str.replace(/&gt;/gi, "">"");
+		str = str.replace(/&lt;/gi, ""<"");
+		return str.replace(/&amp;/gi, ""&"");
+	}
+</script>
+"
+Alias Analysis	Aliasing refers to the simple case where you have to variables which express the same pointer to some memory location. Alias analysis is then the analysis to figure out which pointers have multiple definitions.
+Flow sensitive vs insensitive	"<ul>
+<li><strong>sensitive -</strong> Here we take into account control flow, more specifically for each program point we compute the memory locations a pointer may refer to.</li>
+<li><strong>insensitive -</strong> Here we just have a single points-to memory location which we say all of the pointers point to.</li></ul>"
+Context sensitive vs insensitive	"<ul>
+<li><strong>sensitive -</strong> Here we take into account the calling context and can use information to jump to the original call site.</li>
+<li><strong>insensitive -</strong> Here we do not take into account the calling context.</li></ul>"
+"
+
+<div id=""front""><pre>Andersen style pointer analysis</pre></div>
+
+<script>
+	var getResources = [
+		getCSS(""_katex.css"", ""https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css""),
+		getCSS(""_highlight.css"", ""https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/styles/default.min.css""),
+		getScript(""_highlight.js"", ""https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/highlight.min.js""),
+		getScript(""_katex.min.js"", ""https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js""),
+		getScript(""_auto-render.js"", ""https://cdn.jsdelivr.net/gh/Jwrede/Anki-KaTeX-Markdown/auto-render-cdn.js""),
+		getScript(""_markdown-it.min.js"", ""https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.0.4/markdown-it.min.js""),
+                getScript(""_markdown-it-mark.js"",""https://cdn.jsdelivr.net/gh/Jwrede/Anki-KaTeX-Markdown/_markdown-it-mark.js"")
+	];
+        Promise.all(getResources).then(() => getScript(""_mhchem.js"", ""https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/mhchem.min.js"")).then(render).catch(show);
+	
+
+	function getScript(path, altURL) {
+		return new Promise((resolve, reject) => {
+			let script = document.createElement(""script"");
+			script.onload = resolve;
+			script.onerror = function() {
+				let script_online = document.createElement(""script"");
+				script_online.onload = resolve;
+				script_online.onerror = reject;
+				script_online.src = altURL;
+				document.head.appendChild(script_online);
+			}
+			script.src = path;
+			document.head.appendChild(script);
+		})
+	}
+
+	function getCSS(path, altURL) {
+		return new Promise((resolve, reject) => {
+			var css = document.createElement('link');
+			css.setAttribute('rel', 'stylesheet');
+			css.type = 'text/css';
+			css.onload = resolve;
+			css.onerror = function() {
+				var css_online = document.createElement('link');
+				css_online.setAttribute('rel', 'stylesheet');
+				css_online.type = 'text/css';
+				css_online.onload = resolve;
+				css.onerror = reject;
+				css_online.href = altURL;
+				document.head.appendChild(css_online);
+			}
+			css.href = path;
+			document.head.appendChild(css);
+		});
+	}
+
+
+	function render() {
+		renderMath(""front"");
+		markdown(""front"");
+		show();
+	}
+
+	function show() {
+		document.getElementById(""front"").style.visibility = ""visible"";
+	}
+
+	function renderMath(ID) {
+		let text = document.getElementById(ID).innerHTML;
+		text = replaceInString(text);
+		document.getElementById(ID).textContent = text;
+		renderMathInElement(document.getElementById(ID), {
+			delimiters:  [
+  				{left: ""$$"", right: ""$$"", display: true},
+  				{left: ""$"", right: ""$"", display: false}
+			],
+            throwOnError : false
+		});
+	}
+
+	function markdown(ID) {
+		let md = new markdownit({typographer: true, html:true, highlight: function (str, lang) {
+                            if (lang && hljs.getLanguage(lang)) {
+                                try {
+                                    return hljs.highlight(str, { language: lang }).value;
+                                } catch (__) {}
+                            }
+
+                            return ''; // use external default escaping
+                        }}).use(markdownItMark);
+		let text = replaceHTMLElementsInString(document.getElementById(ID).innerHTML);
+		text = md.render(text);
+		document.getElementById(ID).innerHTML = text.replace(/&lt;\/span&gt;/gi,""\\"");
+	}
+	function replaceInString(str) {
+		str = str.replace(/<[\/]?pre[^>]*>/gi, """");
+		str = str.replace(/<br\s*[\/]?[^>]*>/gi, ""\n"");
+		str = str.replace(/<div[^>]*>/gi, ""\n"");
+		// Thanks Graham A!
+		str = str.replace(/<[\/]?span[^>]*>/gi, """")
+		str.replace(/<\/div[^>]*>/g, ""\n"");
+		return replaceHTMLElementsInString(str);
+	}
+
+	function replaceHTMLElementsInString(str) {
+		str = str.replace(/&nbsp;/gi, "" "");
+		str = str.replace(/&tab;/gi, ""	"");
+		str = str.replace(/&gt;/gi, "">"");
+		str = str.replace(/&lt;/gi, ""<"");
+		return str.replace(/&amp;/gi, ""&"");
+	}
+</script>
+"	"<div id=""back""><pre><div>Andersen pointer analysis is a may-analysis that is also flow-insensitive</div>
+<ul>
+<li>
+<div><strong>grammar</strong> - <code>I ::= p = &amp;x | p = q | *p = q | p = *q</code></div>
+</li>
+<li>
+<div><strong>rules</strong></div>
+<table>
+
+<tbody><tr>
+<th>base</th>
+<th>a = &amp;b</th>
+<th>$a\supe \{b\}$</th>
+<th>$\text{loc}(b)\in \text{pts}(a)$</th>
+</tr>
+
+
+<tr>
+<td>simple</td>
+<td>a = b</td>
+<td>$a\supe b$</td>
+<td>$\text{pts}(a)\supe \text{pts}(b)$</td>
+</tr>
+<tr>
+<td>complex</td>
+<td>a = *b</td>
+<td>$a\supe  *b$</td>
+<td>$\forall v\in\text{pts}(b)\ ,\ \text{pts}(a)\supe \text{pts}(v)$</td>
+</tr>
+<tr>
+<td>complex</td>
+<td>*a = b</td>
+<td>$*a\supe b$</td>
+<td>$\forall v\in\text{pts}(a)\ ,\ \text{pts}(v)\supe \text{pts}(b)$</td>
+</tr>
+
+</tbody></table>
+</li></ul></pre></div>
+
+<script>
+	var getResources = [
+		getCSS(""_katex.css"", ""https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css""),
+		getCSS(""_highlight.css"", ""https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/styles/default.min.css""),
+		getScript(""_highlight.js"", ""https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/highlight.min.js""),
+		getScript(""_katex.min.js"", ""https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js""),
+		getScript(""_auto-render.js"", ""https://cdn.jsdelivr.net/gh/Jwrede/Anki-KaTeX-Markdown/auto-render-cdn.js""),
+		getScript(""_markdown-it.min.js"", ""https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.0.4/markdown-it.min.js""),
+		getScript(""_markdown-it-mark.js"",""https://cdn.jsdelivr.net/gh/Jwrede/Anki-KaTeX-Markdown/_markdown-it-mark.js"")
+	];
+        Promise.all(getResources).then(() => getScript(""_mhchem.js"", ""https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/mhchem.min.js"")).then(render).catch(show);
+	
+
+	function getScript(path, altURL) {
+		return new Promise((resolve, reject) => {
+			let script = document.createElement(""script"");
+			script.onload = resolve;
+			script.onerror = function() {
+				let script_online = document.createElement(""script"");
+				script_online.onload = resolve;
+				script_online.onerror = reject;
+				script_online.src = altURL;
+				document.head.appendChild(script_online);
+			}
+			script.src = path;
+			document.head.appendChild(script);
+		})
+	}
+
+	function getCSS(path, altURL) {
+		return new Promise((resolve, reject) => {
+			var css = document.createElement('link');
+			css.setAttribute('rel', 'stylesheet');
+			css.type = 'text/css';
+			css.onload = resolve;
+			css.onerror = function() {
+				var css_online = document.createElement('link');
+				css_online.setAttribute('rel', 'stylesheet');
+				css_online.type = 'text/css';
+				css_online.onload = resolve;
+				css_online.onerror = reject;
+				css_online.href = altURL;
+				document.head.appendChild(css_online);
+			}
+			css.href = path;
+			document.head.appendChild(css);
+		});
+	}
+
+	function render() {
+		renderMath(""front"");
+		markdown(""front"");
+		renderMath(""back"");
+		markdown(""back"");
+		show();
+	}
+
+	function show() {
+		document.getElementById(""front"").style.visibility = ""visible"";
+		document.getElementById(""back"").style.visibility = ""visible"";
+	}
+
+
+	function renderMath(ID) {
+		let text = document.getElementById(ID).innerHTML;
+		text = replaceInString(text);
+		document.getElementById(ID).textContent = text;
+		renderMathInElement(document.getElementById(ID), {
+			delimiters:  [
+  				{left: ""$$"", right: ""$$"", display: true},
+  				{left: ""$"", right: ""$"", display: false}
+			],
+                        throwOnError : false
+		});
+	}
+	function markdown(ID) {
+		let md = new markdownit({typographer: true, html:true, highlight: function (str, lang) {
+                            if (lang && hljs.getLanguage(lang)) {
+                                try {
+                                    return hljs.highlight(str, { language: lang }).value;
+                                } catch (__) {}
+                            }
+
+                            return ''; // use external default escaping
+                        }}).use(markdownItMark);
+		let text = replaceHTMLElementsInString(document.getElementById(ID).innerHTML);
+		text = md.render(text);
+		document.getElementById(ID).innerHTML = text.replace(/&lt;\/span&gt;/gi,""\\"");
+	}
+	function replaceInString(str) {
+		str = str.replace(/<[\/]?pre[^>]*>/gi, """");
+		str = str.replace(/<br\s*[\/]?[^>]*>/gi, ""\n"");
+		str = str.replace(/<div[^>]*>/gi, ""\n"");
+		// Thanks Graham A!
+		str = str.replace(/<[\/]?span[^>]*>/gi, """")
+		str.replace(/<\/div[^>]*>/g, ""\n"");
+		return replaceHTMLElementsInString(str);
+	}
+
+	function replaceHTMLElementsInString(str) {
+		str = str.replace(/&nbsp;/gi, "" "");
+		str = str.replace(/&tab;/gi, ""	"");
+		str = str.replace(/&gt;/gi, "">"");
+		str = str.replace(/&lt;/gi, ""<"");
+		return str.replace(/&amp;/gi, ""&"");
+	}
+</script>
+"
+Memory corruption	Memory corruption refers to the case where an attacker provides specific sequence of input bytes to some program that accepts input which in turn gives an attacker access to some unauthorized data.
+Instrumented pointer metadata	We can create a instrument a basic pointer by having metadata which stores the pointers base, its limit and the actual value within the range of the base → limit.
+Issues with pointer metadata	"<div>There are two main issues with this approach</div>
+<ol>
+<li>Its likely not compatible with other libraries who don’t use a custom pointer type</li>
+<li>The check could be redundant in cases where we know that the writes are in bounds</li></ol>"
+Linear/contiguous buffer overflow	"<div>Here is an example of a piece of code which can be subject to a continuous buffer overflow, that is we supply the program with more data than there is space in the buffer and overwrite the return address in the stack with any arbitrary address allowing for arbitrary code execution.</div>
+<pre><code>void getURL () {
+    char buf[40];           // allocated buffer of 40 bytes
+    read(stdin, buf, 64);   // reading 64 bytes 
+    get_webpage(buf);       
+}
+
+void IE () {
+    getURL();    
+}
+</code></pre>"
+"<span style=""font-weight:600"">Non-linear buffer overflow&nbsp;</span>"	There are also non-linear buffer overflows which allow us to directly modify the return address to allow for arbitrary code execution&nbsp;
+Dangling pointer	"A dangling pointer is just a pointer to a memory location, that is, some allocated object in memory which has been freed. A key issue with this is what happens when you dereference this (since its pointing to freed, potentially overwritten memory). A dangling pointer is a type of <span style=""font-weight:600"">temporal vulnerability</span>."
+VFT&nbsp;	Dangling pointers can lead to arbitrary code execution in C++ through the concept of virtual functions specifically the virtual function table.
+Dangsan&nbsp;	Dangsan prevents use-after-free through 2 main techniques, it uses metadata to keep track of all pointers that point to a given allocated memory block. Furthermore if this memory block is freed Dangsan invalidates the pointers and raises an exception/crashes if any aliased pointer to the freed block has an attempted dereference.
+Dangsan logs	"For a <span style=""font-style:italic"">single </span>given memory location dangsan uses logs, that is, basic lists which are unique for each thread. On free we simply go through the logs for a given memory location and invalidate all the pointers / aliases that correspond to this memory location."
+CFI	CFI abstractly works by enforcing that only legitimate branches and calls are allowed. That is, branches and calls which follow the original control flow graph. The correct CFG can be statically determined with pointer analysis and enforced at runtime through instrumentation.
+Ideal CFI&nbsp;	Ideal CFI requires a precise CFG because we need specific labels for each basic block we want to enforce a branch to. Overall it has a non-negligible performance overhead, that is, its application in practice does effect performance.
+Loose CFI&nbsp;	"Because we grouping valid branch locations under the same ID we don’t need as many labels. Its also applicable to binary software because we don’t need to work with as much information and overall more efficient than Ideal CFI <span style=""font-style:italic"">which makes it the most implemented in practice.</span>"
+DFI&nbsp;	Similar to CFI in DFI we statically analyze our program, in this case the data-flow, and at runtime we enforce specific stores from which we can read.
+DFI static analysis properties	"<div>Within procedures <em><strong><strong><strong><strong><strong><strong><strong>flow-sensitive</strong></strong></strong></strong></strong></strong></strong></em> analysis was used but across different procedures <em><strong><strong><strong><strong><strong><strong><strong><strong>flow-insensitive</strong></strong></strong></strong></strong></strong></strong></strong></em> analysis was used.</div>
+<div>For the points-to analysis Andersens algorithm was used which also scales well to larger programs.</div>
+<div>The static analysis also made some assumptions about pointer arithmetic namely that pointer arithmetic cannot navigate between independent objects.</div>"
+Meltdown + Spectre&nbsp;	"Meltdown and Spectre are <span style=""font-weight:600"">speculative execution attacks </span>that exploit <span style=""font-weight:600"">hardware vulnerabilities.&nbsp;</span>"
+Kernel + Userspace&nbsp;	One of the key things this attack, specifically meltdown enables is the crossing of the userspace into the kernel space.
+Hardware attacks	"<div>Another issue is that these attacks exploit issues with the hardware, which leads to multiple problems because</div>
+<ul>
+<li>Hardware does not change often ⇒ attacks persist for a long time</li>
+<li>Hardware has certain inherent designs which the attacks exploit ⇒ compounds the issue further</li></ul>"
+Cache	Data stays in the cache for as long as the CPU is preforming frequent accesses to it. Once this is no longer the case the cache evicts the data to make space for new data.
+Cache memory-mapping&nbsp;	Because cache is so small you often have the case that various memory location from the main memory are mapped onto one specific location in the cache.
+Out of order execution&nbsp;	This a paradigm of modern CPUs in which a CPU chooses to utilize all of its resources by not waiting on a slow instruction to execute a subsequent faster instruction if they don’t depend on one another. This helps with efficiency because a certain slow operation might only be utilizing some part of the CPU, but its also another point which the aforementioned vulnerabilities can exploit.
+Meltdown&nbsp;	"<div>Meltdown is an attack which broke the boundary between user and kernel space by exploiting hardware performance optimizations.</div>
+<div>The major issue with the kernel memory exception was that it could be bypassed by the out of order execution in the case where the exception was took long to execute which in turn could allow an attack to read kernel memory.</div>"
+Spectre V1&nbsp;	"<div>Spectre V1 supplies an out of bounds access then uses speculative execution to bypass the bounds check and read the secret value.</div>
+<div>It then uses this value as an index into another array.</div>
+<div>The main purpose of this being while in the end on the register level the secret values will be squashed (because the condition will resolve to false) this operation of using the multiplied value as an index gives a trace which can be inspected and from which we can get our desired secret value.</div>"
+Spectre gadget&nbsp;	"<div>A Spectre gadget just refers to a segment of code which follows a pattern that is vulnerable to attacks. In the above example the pattern is that you can exploit the out of order execution by suppling a hard to compute condition.</div>
+<div>Generally these gadgets do not come in as trivial of a form and have to be discovered or ig engineered somehow to enable the exploit.</div>"
+Spectre steps	"<pre><code>// basic struct to define a generic array datastruct	
+struct array {
+    unsigned long length;
+    unsigned char data[]
+};
+
+// creating array using our struct 
+struct array *arr1 = ..., *arr2 = ...; 
+
+// some offset from an untrusted caller, so potentially an attacker
+unsigned long untrusted_offset_from_caller = ...; 
+
+// check that this offset is within the bounds of the array to avoid a buffer overflow
+if (untrusted_offset_from_caller &lt; **arrl-&gt;length**) { // check could take potentially long
+		// if its within the bounds then we use offset to read value 
+    unsigned char val = arr1-&gt;data[untrusted_offset_from_caller];
+		// we use the speculatively computed value as array into another index
+    unsigned char val2 = arr2-&gt;data[val * 4096]; // this is the probe array
+}
+</code></pre>
+<ol>
+<li>
+<div>We create our probe array, <code>arr2</code> in the above example, and evict all entries in the array from the cache by writing memory from main memory locations mapped to the same cache location as the array elements. So we are just removing all elements of <code>arr2</code> from the cache</div>
+<div>We do this before the speculative execution step, the reasoning for why we do this is because during the speculative execution one element, that at position <code>val * 4096</code> will be written to the cache. Which means that only this element will have a fast access, all other elements will have a slow access.</div>
+</li>
+<li>
+<div>We then preform the speculative execution attack, so we supply the untrusted offset to get the secret out of bounds access and use this as an index into our probe array to load the specific value of the probe array into the L1 cache</div>
+<div>As said above this way we can correlate a fast memory access to a specific mapping on the main memory.</div>
+</li>
+<li>
+<div>We now try and access each element from our probe array and time the accesses. All the elements we should evicted should intuitively have a slow access because we are fetching them from main memory, whereas the access of the element at the position specified by our secret value should have a fast access as its loaded into the cache.</div>
+</li>
+<li>
+<div>We can then link this fast access to a location in the main memory from which we can determine our <code>val</code> key</div>
+<div>I’m not 100% if I described this correctly, but I think its just that if we go through all the elements of arr2 we can kinda infer that the index of the fast access corresponds to <code>val</code></div>
+</li></ol>"
+Spectre Branch Target Injection	BTI exploits the branch predictor by using an engineered piece of code to train the branch prediction to speculatively execute a piece of code from a completely different branch which is by the hardware perceived as the normal branch.
+Spectre BTI process&nbsp;	"<ol>
+<li>Engineer a piece of code which has an overlapping branch address suffix as some branch who’s code at the target address you wish to execute.</li>
+<li>Train the branch predictor using this unrelated but overlapping branch to speculatively execute the code.</li>
+<li>Use the aforementioned cache method to get the leaked secret.</li></ol>"
+Kernel Page Table Isolation	<div>On older CPU’s Kernel Page Table Isolation is used, which as the name implies means we have the entire user space and kernel memory mapping available when we are in kernel mode and in user space we only have a minimal subset of the kernel available. On newer CPU’s this issue is solved through hardware changes.</div>
+Spectre mitigations	"Mitigating Spectre attacks is a lot harder than Meltdown due to the variety of forms in which this attack comes, but two prominent methods are <span style=""font-weight:600"">branch check bypass </span>and <span style=""font-weight:600"">Retpolines</span>"
+Branch check bypass	"<div>The branch check bypass uses a special instruction called <code>LFENCE</code> inserted after every bounds check (or similar), so protected regions of code by some condition.</div>
+<div>This condition stops speculative execution by enforcing that the condition or check the instruction is inserted after be resolved completely.</div>
+<div>So if some condition is bypassed by speculative execution it won’t actually execute any of the protected code until the check is resolved thus avoiding unauthorized leaks.</div>"
+Retpolines	"<div>Somewhat similar to before in that we add a piece of code to prevent speculative execution but it works by trapping any speculative execution in an infinite loop.</div>
+<div>That is, we modify the target for some branch prediction to point to some trapping code such that in the case of speculative execution instead of executing the target code we actually executed our trap code which just infinitely loops during speculative execution.</div>"

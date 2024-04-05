@@ -1,0 +1,3 @@
+#separator:tab
+#html:true
+moral theories	moral theories are systematizations ; they tell a general story on why it's okay to intervene in certain cases, but not in others ; they can be used to resolve moral dilemmas in a systematic and intelligent way
