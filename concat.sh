@@ -21,8 +21,6 @@ function aggregate_cards() {
 				fi
             fi
         done
-		
-        cat "$target_file" 
 
         cp "$target_file" "../release"
 
