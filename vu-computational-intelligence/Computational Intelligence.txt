@@ -1,2 +1,90 @@
 #separator:tab
 #html:true
+convex / non-convex	Convex refers to a problem which has one optimal solution, in terms of functions it describes functions with a smooth bowl-shaped surface ; Non-convex describes non-smooth problems, so ones where you can get stuck in a local-minima, or in other words on where you have multiple solutions.
+constrained / unconstrained	Constrained optimization means the choice of variable can take on certain values within a specific “constrained” range ; Unconstrained means we can choose variables that take on any point.
+continuous / discrete	Continuous describes a problem with continuous variables, this can for example be a continuous function of two variables ; Discrete refers to a problem which consists of a countable set ; In both cases the aim is to find some optimum.
+global / local	Global optimization includes finding the local the optimal solution on problems that contain local optima ; Local optimization includes finding the optimal solution for a specific region in the search space.
+deterministic / stochastic	Deterministic algorithms reach a global optimum in an indefinite amount of time, but a local optimum in a finite amount of time ; Stochastic algorithms  use randomness in their optimization approaches, making it suitable for problems which are more dynamic and uncertain.
+Optimization formally	"We want to find the optimal solution from a given set of possible solutions Y that maximizes or minimizes a given <span style=""font-weight:600"">objective function </span><span style=""font-weight:600"">f(x)</span>​"
+Optimization methods (0th, 1st and 2nd order) with examples	"<table>
+
+<tbody><tr>
+<th>method</th>
+<th>description</th>
+<th>examples</th>
+</tr>
+
+
+<tr>
+<td>derivative free method</td>
+<td>Optimization method that does not make use of the derivative.</td>
+<td>hill climbing, evolutionary algorithms</td>
+</tr>
+<tr>
+<td>gradient based method</td>
+<td>Methods which do make use of the gradient of a function. Only work on certain types of functions.</td>
+<td>gradient descent, ADAM</td>
+</tr>
+<tr>
+<td>hessian-based methods</td>
+<td>Methods which make use of both the first and second derivative of a function.</td>
+<td>newtons method</td>
+</tr></tbody></table>"
+iterative optimization	Iterative optimization as the name implies uses a basic iterative (loop) based process as a means of finding the parameters which fulfill the constraints while also minimizing the function. This can include both derivative free and gradient based methods.
+"<span style=""font-weight:600"">learning rate </span><span style=""font-weight:600"">a_t</span>​"	"<div>The choice of learning rate is important</div>
+<table>
+
+<tbody><tr>
+<th>too large learning rate</th>
+<th>to small learning rate</th>
+</tr>
+
+
+<tr>
+<td>If the learning rate is too large then we can overshoot the optimal parameters.</td>
+<td>If the learning rate is to small we can end up missing the best optimum of the function entirely</td>
+</tr></tbody></table>"
+Derivative Free Optimization (DFO) methods	"<b><i>
+
+</i></b><b></b><table><tbody><tr>
+<th>Non-differentiable Functions</th>
+<th>Functions for which we simply cannot compute the derivative on a given domain</th>
+</tr>
+
+
+<tr>
+<td>Unknown Functions</td>
+<td>Functions which we don’t know but can query; in other words, functions whose output we can get but are unsure how said output is produced (blackbox)</td>
+</tr>
+<tr>
+<td>Discrete Search Space Functions</td>
+<td>Similar to non-differentiable in the sense that the function is not continuous and smooth, rather it consists of some countable set</td>
+</tr></tbody></table>"
+DFO method - Random Search issues	"<table>
+
+<tbody><tr>
+<th></th>
+<th></th>
+</tr>
+
+
+<tr>
+<td>Curse of dimensionality</td>
+<td>Fails on higher dimensional problems</td>
+</tr>
+<tr>
+<td>Many evaluations</td>
+<td>Requires a lot of evaluations of the objective function</td>
+</tr>
+<tr>
+<td>Past solutions</td>
+<td>Does not take into account current and past solutions</td>
+</tr></tbody></table>"
+Iterative GB method - Coordinate Descent	Coordinate descent is based on the idea of minimizing a multivariable function in one direction at a time. The simple example is cyclic coordinate descent where we iterate through the directions, one at a time, minimizing the objective function with respect to each coordinate direction at a time.
+Hill climbing	"Hill climbing describes an update rule \phi  in which we randomly sample another solution from the neighborhood of points we are considering. Aside from this it functions the same as coordinate descent.<br><br><div><strong>differentiating factors</strong></div>
+<div>The two key difference here are that the update rule is basing on a random sampling of the neighbors $N$ of $x_t$  at a step size of $\alpha$.</div>
+<div>In addition here we update the entire set of parameters in one go as opposed to updating in a specific line individually .</div>"
+Local vs Global search	"<div><strong>Exploitation - local search</strong></div>
+<div>Once one good solution is found, examine neighbors to determine of a better solution is present (good solutions generally tend to cluster).</div>
+<div><strong>Exploration - global search</strong></div>
+<div>Often a better solution may lie in an unexplored region in the state space, so we do not remain in one region.</div>"
