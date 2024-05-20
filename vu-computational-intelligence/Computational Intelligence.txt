@@ -88,3 +88,139 @@ Local vs Global search	"<div><strong>Exploitation - local search</strong></div>
 <div>Once one good solution is found, examine neighbors to determine of a better solution is present (good solutions generally tend to cluster).</div>
 <div><strong>Exploration - global search</strong></div>
 <div>Often a better solution may lie in an unexplored region in the state space, so we do not remain in one region.</div>"
+applications of monte carlo methods	"<table>
+
+<tbody><tr>
+<th>analytically infeasible quantities</th>
+<th>We can use MCM to compute quantities which are hard to analytically derive, which includes things like certain integrals or expectations.</th>
+</tr>
+
+
+<tr>
+<td>optimization</td>
+<td>MCM is used in optimization algorithms like simulated annealing where we randomly sample to explore the solution space X.</td>
+</tr></tbody></table>"
+MCM main problem	"<div>If we consider a grid (e.g. discrete solution space) with unit intervals; so a distance of e.g. 0.01 to the adjacent points; then we end up with $10^2$ points.</div>
+<div>If we <em>extend this to higher dimensions</em> we get an exponential increase in the number of points. Which in turn means an exploration of this higher dimensional space naturally leads to an exponentially larger number of states to explore.</div>
+<div><strong>The issue</strong> now being that independent sampling them becomes exponentially more ineffective as the size of the solution space increases.</div>"
+Solution to MCM main problem	"<div>The idea to solve the curse of dimensionality is that we make a new sample <strong>dependent on the past</strong>, that is, we represent the samples as a Markov Chain.</div>
+<div>In simple terms the idea is that we have some target distribution \(p(x)\)&nbsp;from which we can draw samples. What we do is we</div>
+<ol>
+<li>draw a bunch of samples from this distribution</li>
+<li>construct a markov chain whose <em>stationary distribution</em> is our target distribution</li></ol>"
+Key conditions for MCMC	"<div>There are two main conditions that must be true for this markov chain to work</div>
+<table>
+
+<tbody><tr>
+<th>irreducibility</th>
+<th>For any state in the markov chain there is a positive probability of visiting all other states.</th>
+</tr>
+
+
+<tr>
+<td>aperiodicity</td>
+<td>The chain should not get trapped in cycles.</td>
+</tr></tbody></table>"
+"<span style=""font-weight:600"">Optimization through sampling - Why does simulated annealing work ?</span>"	"<ul><li><div>as we get more samples we better approximate our objective function e.g. target distribution (so just MH)</div>
+</li>
+<li>
+<div>as we get more samples our temperature also decreases more (following our cooling function)</div>
+</li>
+<li>
+<div><strong>key point →</strong> as the temperature decreases the probabilities to either step or not to step increase hence forcing more of the samples into areas of higher probability, and in turn leading the samples to be approximations of the maxima/minima of our objective</div>
+<div><em>This is just basic math, as denominator gets smaller it amplifies the size of the overall ratio and hence the probability to step to a particular state.</em></div>
+</li></ul>"
+Stochastic vs Deterministic Search	"<table>
+
+<tbody><tr>
+<th></th>
+<th>stochastic search</th>
+<th>deterministic search</th>
+</tr>
+
+
+<tr>
+<td>generation</td>
+<td>sample \(x^*\)&nbsp;from a proposal distribution</td>
+<td>sample \(n\)&nbsp;set of solutions in the neighborhood of values</td>
+</tr>
+<tr>
+<td>evaluation</td>
+<td>calculate acceptance probability \(A(x^t, x^*)\)</td>
+<td>evaluate the potential solutions</td>
+</tr>
+<tr>
+<td>selection</td>
+<td>sample \(u\sim \mathcal U[0, 1]\)&nbsp;and if \(u&lt;A\)&nbsp;update solution</td>
+<td>pick solution with best objective as current solution</td>
+</tr></tbody></table>"
+Main questions of population methods	"The main questions behind population based methods are 
+→ Can we improve the performance of search algorithms by looking through <span style=""font-weight:600"">multiple candidate solutions </span>? 
+→ How can we use information about the <span style=""font-weight:600"">quality </span>of the <span style=""font-weight:600"">candidates </span>to <span style=""font-weight:600"">speed up optimization ?</span>"
+main idea of population methods	We want to run an algorithm multiple times in parallel and exchange information about the objective among solutions.
+what is MCMC with parallel tempering	An example of a basic population based method would be to choose different starting temperatures, then each iteration exchange information between the different executing threads about which temperature is yielding a more optimal solution and swap states accordingly.
+pseudocode algorithm for population methods	"<div>We can describe the abstract pseudocode for population methods as follows</div>
+<ol>
+<li><strong>Initialization -</strong> we create some staring population of solutions and evaluate them</li>
+<li><strong>Loop</strong> until stopping criterion is reached
+<ol>
+<li><strong>generation</strong> - we generate the new solutions (in parallel)</li>
+<li><strong>evaluation</strong> - we evaluate the new solutions</li>
+<li><strong>selection</strong> - we select the best states based on the evaluated solutions</li>
+</ol>
+</li></ol>"
+key aspects of an evolutionary algorithm	"<table>
+
+<tbody><tr>
+<th>genotype / chromosome / individuals</th>
+<th>how we represent a particular solution</th>
+</tr>
+
+
+<tr>
+<td>gene</td>
+<td>each component of the solution</td>
+</tr>
+<tr>
+<td>phenotype</td>
+<td>observable characteristics of a solution</td>
+</tr>
+<tr>
+<td>population</td>
+<td>the set of individuals (solutions)</td>
+</tr>
+<tr>
+<td>fitness (function) value</td>
+<td>a measure of how well a given individual solves a problem</td>
+</tr>
+<tr>
+<td>crossover / recombination, mutation</td>
+<td>the process of mixing and varying existing solutions to produce the next generation</td>
+</tr></tbody></table>"
+evolutionary algorithm pseudocode	"<div>We can also describe an EA in terms of the scheme for population based methods</div>
+<ol>
+<li><strong>Initialization -</strong> we create some staring population of solutions and evaluate them</li>
+<li><strong>Loop</strong> until stopping criterion is reached
+<ol>
+<li><strong>generation</strong> - we generate the new solutions by applying recombination and mutation</li>
+<li><strong>evaluation</strong> - we evaluate the new solutions using the fitness function</li>
+<li><strong>selection</strong> - we select the best states based on the evaluated solutions</li>
+</ol>
+</li>
+</ol>
+<div>Note - this is more or less a rephrasing of what is shown in the diagram</div>"
+Biomorphism	Biomorphism refers to the idea of modeling different design elements in art / engineering on naturally occurring (e.g. biological) patterns.
+Automatic Evolutionary Art	Genetic algorithms (EAs that use genes) can be used to create art over different generations through the process of crossover and mutation to approach some optimum.
+Neuroevolution	Neuroevolution is a method for modifying neural network parameters (e.g. weights) in order to learn a specific task. Evolutionary computing (e.g. genetic algorithms) are used to search for the network parameters that maximize/minimize a fitness function.
+Benefits of Neuroevolution	"<div>Its a very general method of neural network learning where we</div>
+<ul>
+<li>don’t need explicit targets</li>
+<li>can work with non-differentiable activation functions</li>
+<li>can work with recurrent networks</li>
+<li>can modify weights, activation functions, network topologies etc.</li></ul>"
+Motivation behind neuroevolution	Neuroevolution lends itself well to tasks where we don’t necessarily have clear targets we can use to evaluate the performance of the network. Its only after preforming actions that we know how well they worked.
+Continuous Control	Continuous control refers to the case in reinforcement learning where the actions taken by an agent (e.g. robotic arm) have a continuous action space (e.g. continuous range of position angles) as opposed to a discrete action space.
+Evolutionary Design	Evolutionary methods can also be used in design, similar to the idea of Biomorphism we can use evolutionary methods to create real world designs that optimize some fitness function.
+Symbolic regression	"Symbolic regression aims to discover concise closed-form mathematical equations from data. Its a type of regression analysis that aims to find a model that bits fits a given dataset in terms of accuracy <span style=""font-style:italic"">and </span>simplicity."
+Relationship between Machine Learning and Symbolic Regression	"<div>You can use approaches from machine learning, e.g. Neural Networks in conjunction with other methods to find closed form expressions that represent data from some unknown function.</div>
+<div>e.g. <a href=""https://arxiv.org/pdf/1905.11481"">https://arxiv.org/pdf/1905.11481</a></div>"
