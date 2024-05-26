@@ -224,3 +224,520 @@ Evolutionary Design	Evolutionary methods can also be used in design, similar to 
 Symbolic regression	"Symbolic regression aims to discover concise closed-form mathematical equations from data. Its a type of regression analysis that aims to find a model that bits fits a given dataset in terms of accuracy <span style=""font-style:italic"">and </span>simplicity."
 Relationship between Machine Learning and Symbolic Regression	"<div>You can use approaches from machine learning, e.g. Neural Networks in conjunction with other methods to find closed form expressions that represent data from some unknown function.</div>
 <div>e.g. <a href=""https://arxiv.org/pdf/1905.11481"">https://arxiv.org/pdf/1905.11481</a></div>"
+Types of Evolutionary Algorithms	"EAs can be broken down into 5 important types which each have unique properties, namely: <span style=""font-weight:600"">genetic algorithms, genetic programming, evolutionary strategies, differential evolution, estimation of distribution algorithms</span>"
+Genetic programming	"The idea here is to evolve <span style=""font-weight:600"">tree-structured programs </span>such as trees representing operations usually starting from some unfit (e.g. random) population of programs represented as trees, and then applying evolutionary operators to this population to optimize for a particular task."
+Differential Evolution	This is similar to the standard genetic algorithms with the key difference being the use of real-valued representations. In other words, individuals in our population are represented by numbers. This effects how we preform the different evolutionary operators.
+differential evolution algorithm	"<div>Going through it by the key sections :</div>
+<ol>
+<li>
+<div><em>parameter selection</em> - this is mostly problem dependent, but there are some typical values, in this case $n$ referrers to the dimensionality of the problem</div>
+</li>
+<li>
+<div><em>new solution generation</em> - to generate our new solution (also called <strong>trail vector</strong>), we generate the new value for each dimension, the key part is the crossover condition it consists of two parts</div>
+<ol>
+<li>the basic crossover probability, or</li>
+<li>if <code>i</code> is equal to the random index we picked <code>R</code></li>
+</ol>
+<div>The equation used here is simply a way of combining the 3 random parents (agents) we picked to generate the offspring solution $\mathbf y$.</div>
+</li>
+<li>
+<div><em>selection</em> - this is again the same idea as the previous evolutionary methods, we simply check if your candidate solution evaluates to a better fitness using our objective/fitness function $f$</div>
+</li></ol>"
+Estimation of Distribution Algorithm	"EDAs separate themselves from other evolutionary algorithms by using learning and sampling from a <span style=""font-weight:600"">probability distribution of the best individuals of the population </span>at each iteration of the algorithm, instead of more traditional evolutionary operators like crossover."
+Evolutionary Strategies (CMA-ES)	Evolutionary strategies are stochastic DFOs for optimizing objective functions, CMA-ES is a specific type of evolutionary strategy with a focus on using information from the covariance matrix to generate a distribution over possible solutions.
+Fitness Function	A fitness function generally corresponds to the objective function. Often times they are the same but don’t necessarily have to be.
+Fitness function common issues	"<table>
+
+<tbody><tr>
+<th>dominance</th>
+<th>An individual could surpass all other individuals this could reduce diversity and lead to premature convergence (e.g. getting stuck in local minima)</th>
+</tr>
+
+
+<tr>
+<td>crowding</td>
+<td>The population can become very dense in a few crowded regions, this can again lead to reduced diversity caused by a lack of exploration with a focus on exploitation of specific regions.</td>
+</tr>
+<tr>
+<td>vanishing selective pressure</td>
+<td>The fitness differences between individuals are too small, this can lead to slow convergence and stagnation because its harder to distinguish and favor better solutions.</td>
+</tr></tbody></table>"
+Adapting Fitness Function	"<div>One method to address the issues that come with fitness functions is <strong>Linear Dynamic Scaling.</strong> The general idea is that we redefine our fitness function where we dynamically adjust the fitness values based on the current population. Formally we can expresses this re-defined function as</div>
+<div><br>\[f_\text{lds}(x)=\alpha f(x)-\min\{f(x')\colon x'\in \mathcal P_t\}\]&nbsp;</div>"
+main parts&nbsp;of linear dynamic scaling equation	"<div>The two main effects of this modification are <strong>normalization</strong> and <strong>scaling</strong><br></div>
+<table>
+
+<tbody><tr>
+<th>normalization</th>
+<th>Since we are subtracting the smallest fitness value in the current population from all other solutions we ensure that the fitness values are non-negative and that the lowest fitness value is 0.</th>
+</tr>
+
+
+<tr>
+<td>scaling</td>
+<td>Here essentially define the range of fitness values, this can help if we notice a trend of certain fitness values either being very high or very low, it allows us to constrain outliers a bit more.</td>
+</tr></tbody></table>"
+Selection Mechanisms	"There are two main types of selection mechanisms <span style=""font-weight:600"">deterministic </span>and <span style=""font-weight:600"">stochastic </span>and then further two categories for either type, this being <span style=""font-weight:600"">parent selection </span>and <span style=""font-weight:600"">survivor selection</span>."
+Parent Selection	"Parent selection is used for recombination/crossover and mutation, the most simple example of which is <span style=""font-weight:600"">random selection.</span>"
+"<span style=""font-weight:600"">Proportional/Roulette wheel selection&nbsp;</span>"	"<div>A common choice is to sample according to the normalized fitness values. Here we define the probability of choosing an individual $i$ as :</div>
+<div><br>\[p_i(x_i)=\frac{f(x_i)}{\sum_j f(x_j)}\]&nbsp;</div>"
+Rank Selection	"Type of selection method where the selection probability depends on the <span style=""font-weight:600"">fitness rank </span>of an individual within the population. The two main types of rank selection are <span style=""font-weight:600"">linear ranking </span>and <span style=""font-weight:600"">exponential ranking.&nbsp;</span>"
+Multi-objective optimization	<div>One application of the above methods is in multi-objective optimization, where as the name implies we aim to optimize <strong>multiple objective functions</strong> in a <strong>simultaneous manner</strong>.</div>
+Survivor selection	"<div>Survivor selection are selection methods generally used for determining the next population. We can define two variables</div>
+<ul>
+<li>\(\mu\)&nbsp;- the number of <strong>old individuals</strong></li>
+<li>\(\lambda\)&nbsp;- the number of <strong>new individuals</strong></li></ul>"
+Fitness Based Replacement	"<div>Here we select a certain number of survivors either using $\((\lambda + \mu)\)$ or $\((\lambda, \mu)\)$ - selection methods and then use different approaches to remove the worst part of the population.</div>
+<div>$\((\lambda, \mu)\)$ selection</div>
+<div>Here we create $\(\lambda\)$  children from $\mu$ such that $\(\lambda \geq \mu\)$, in which case the $\mu$ best children constitute a new population.</div>
+<div>$\((\lambda + \mu)\)$ selection</div>
+<div>Here we the parents and offspring are merged together and $\mu$ best individuals of the result constitute the new population.</div>"
+survivor selection replacement strategies	"<table>
+
+<tbody><tr>
+<th>replace worst</th>
+<th>the worst individuals are replaced by the offspring</th>
+</tr>
+
+
+<tr>
+<td>elitism</td>
+<td>a subset of best individuals is kept together with the offspring</td>
+</tr>
+<tr>
+<td>tournament selection</td>
+<td>select an individual and compare it with q individuals (randomly) ; pick $\mu$ individuals with the highest number of wins</td>
+</tr></tbody></table>"
+Mutation	Mutation is the transformation of an individual in a population at a specific iteration.
+Mutation table	"<img src=""Untitled.png"">"
+Crossover	Crossover is the combination of two individuals to generate an offspring.
+Arithmetic crossover	"<div>The idea behind arithmetic crossover is that we want to interpolate between two parents to generate the offspring. There are 3 main types of arithmetic crossover</div>
+<div><strong>simple arithmetic crossover</strong></div>
+<div>Here we just change a part, that is, we interpolate a section of the parents.</div>
+<div><strong>single arithmetic crossover</strong></div>
+<div>Here we change a single position, so we interpolate between a single index for the parents.</div>
+<div><strong>whole arithmetic crossover</strong></div>
+<div>Here we crossover the entire parents.</div>"
+Collective / Swarm Intelligence	"Collective Intelligence (CI) refers to groups of individuals which communicate and cooperate to preform collective problem solving. Examples include : Neural Networks, Immune Systems, Human/Animal Societies. 
+Swarm Intelligence (SI) includes any attempt to design algorithms/distributed problem solving devices inspired by CI."
+Emergence	"<div>Emergence refers to the <strong>phenomenon</strong> where larger entities, patterns, and regularities arise through interactions among smaller or simpler entities that themselves do not exhibit such properties.</div>
+<div><strong>Example - ant foraging behavior</strong></div>
+<div>Ants individually only follow simple rules but collectively solve complex problems such as finding the shortest path to a food source.</div>"
+Cellular Automata	"<div>Cellular Automata are a <strong>model of computation</strong> that consists of</div>
+<ul>
+<li><strong>a grid</strong> of cells</li>
+<li>each cell being in a <strong>finite number of states</strong></li>
+<li>each cell has a <strong>neighborhood of cells</strong></li>
+<li>a <strong>new generation</strong> is created according to some <strong>fixed rule</strong> that determines the state of each cell in terms of the current state of the cell and the states in the neighborhood</li></ul>"
+Artificial Neural Networks	"Artificial Neural Networks, more commonly just <span style=""font-weight:600"">Neural Networks </span>refers to a model inspired by the structure of biological neural networks in animal brains."
+Artificial Immune System	Artificial Immune Systems (AIS) are a class of CI rule-based ML systems inspired by the principles of the animal immune system. Typically modelled after the immune system’s properties of learning and memory for use in problem-solving tasks.
+Particle Swarm Optimization	"<img src=""Untitled (1).png"">"
+Ant Colony Optimization	"<div><strong>Formally</strong></div>
+<div>In general the $k$th ant moves from state $x\rightarrow y$ with probability</div>
+<div>$$&nbsp;\[p_{xy}^k=\frac{ (\tau_{xy}^\alpha)(\eta_{xy}^\beta)}{\sum_{j\in N} (\tau_{xy}^\alpha)(\eta_{xy}^\beta)}\]&nbsp;$$</div>
+<div>In English we would say that the transition probability is the ratio of</div>
+<ul>
+<li>numerator : the amount of pheromone deposited for $x\rightarrow y$ moderated by parameter $\alpha \geq 0$ and the desirability $\eta_{xy}$ moderated by parameter $\beta \geq 1$</li>
+<li>denominator : the amount of pheromone and desirability over all other neighbors $j$ in $N$</li>
+</ul>
+<div>Trails are generally updated when ants have completed a solution, increasing or decreasing the level of trails corresponding to moves that were part of the good or bad solution. A basic example of an updating rule is</div>
+<div>$$&nbsp;\[\tau_{xy}\gets (1-\rho)\tau_{xy}+\sum_k^m\Delta\tau_{xy}^k\]&nbsp;$$</div>
+<div>Here</div>
+<ul>
+<li>$\rho$ is the <strong>pheromone evaporation coefficient</strong></li>
+<li>$\Delta\tau_{xy}^k$ is the amount of <strong>pheromone deposited</strong> by the $k$th ant</li></ul>"
+Ant Clustering Algorithms	"<div>A form of clustering algorithm that mimics the behavior of biological ants.</div>
+<div><strong>Algorithm</strong></div>
+<ul>
+<li><strong>Start</strong> by randomly placing data objects in a 2D grid.</li>
+<li><strong>Deploy ants</strong> that move randomly, picking up and dropping objects based on local similarity.</li>
+<li><strong>Compute probabilities</strong> for picking up or dropping objects based on neighborhood similarity.</li>
+<li><strong>Iterate</strong> the process for sufficient iterations to form clusters.</li>
+<li><strong>Stop</strong> when the system stabilizes and clusters are formed.</li></ul>"
+Swarm Robotics	<div>Swarm robotics&nbsp;is an approach to the coordination of multiple robots as a system which consist of large numbers of mostly simple physical&nbsp;robots. ″In a robot swarm, the collective behavior of the robots results from local interactions between the robots and between the robots and the environment in which they act.″</div>
+What is RL	"Reinforcement Learning refers to algorithms in which you generally have an <span style=""font-weight:600"">autonomous </span>(self-driven) <span style=""font-weight:600"">agent </span>which takes suitable <span style=""font-weight:600"">actions </span>to maximize a particular <span style=""font-weight:600"">reward </span>in a specific <span style=""font-weight:600"">environment</span>."
+What are the main parts of RL ?	"<ul>
+<li>$S_t$ the state an agent is in at timestep $t$</li>
+<li>$R_t$ the reward that an agent gets from being in that state due to an action</li>
+<li>$A_t$ the action taken at time step $t$ to move towards a particular state yielding a particular reward</li></ul>"
+How do we define the reward estimate&nbsp;	"<div>To define some notation in RL we commonly use the following</div>
+<table>
+
+<tbody><tr>
+<th>$Q_t(A)$</th>
+<th>A reward estimate for the action $A$ taken at time step $t$</th>
+</tr>
+
+
+<tr>
+<td>$N_t(A)$</td>
+<td>The number of selections for the action $A$ prior to time step $t$</td>
+</tr>
+<tr>
+<td>$R_i$</td>
+<td>The reward of the $i$th repeated action</td>
+</tr>
+
+</tbody></table>
+<div>Using this we can create an expression for $Q_t(A)$ namely</div>
+<div>$$&nbsp;\[Q_t(A)=\frac{\#\text{rewards}}{\#\text{actions}}=\frac{\sum_{i=1}^{N_{t-1}(A)}R_i}{N_{t-1}(A)}\]&nbsp;$$</div>
+<div>In other words all this is, is the <strong>average reward</strong>, for an action $A$</div>"
+What is the 2 armed bandit problem ?	"<div>The 2-armed bandit problem is a problem in which a decision maker (agent) is able to pull from a number of (slot machine) arms (actions), where the properties of the result of each choice are generally only partially known initially, and may become better known over time.</div>
+<div>So we initially assume a random reward for all slot machine arms but over time realize that certain machines tend towards a higher reward than others.</div>"
+What are the main approaches for n-armed bandit ?	"<div><strong>greedy algorithms</strong></div>
+<div>Here the approach is that we randomly try arms and continue to pull those with the highest $Q(A)$</div>
+<div>$<strong>\epsilon$-greedy algorithms</strong></div>
+<div>Here the approach is to select the highest estimated reward with the probability $1-\epsilon$ and explore other random arms with the probability of $\epsilon$</div>"
+How do we define the action taken for epsilon greedy algorithms ?	"<div>We can formally define an action $A$ taken at time step $t$ in an $\epsilon$-greedy algorithm as</div>
+<div>$$&nbsp;\[A_t=\begin{cases} \arg\max_A(Q_t(A)) &amp; \text{if }u\sim \mathcal U[0, 1]&lt;1-\epsilon \\ A^i\quad i\sim \mathcal U[0, n]&amp; \text{otherwise}\end{cases}\]&nbsp;$$</div>"
+What is the formula for the reward estimate update in terms of the previous reward estimates ?	"<div>$$
+\[Q_{t+1}=Q_t+\alpha[R_k-Q_k]\]&nbsp;$$</div>"
+Explain the upper confidence bound and the parts of its formula	"<div>The UCB algorithm as opposed to $\epsilon$-greedy balanced exploration with exploitation through the use of an additional exploration term. For the notation we define an additional variable $c$ called the <strong>confidence value</strong> which defines controls the level of exploration.</div>
+<div>$$&nbsp;\[A_t=\arg\max_A\left[Q_t(A)+c\sqrt{ \frac{1}{N_t(A)}\ln t }\right]\]&nbsp;$$</div>
+<div><strong>Exploration term</strong></div>
+<div>This is they key distinguishing factor here, we can present it in a simple way through the abstract function</div>
+<div>$$
+\[f(x)=\sqrt{\frac{1}{b}\ln x}\]$$</div>
+<div>The way to understand this is, as the number of pulls $b$ increases, the value of the function decreases more rapidly over time before leveling off. The effect this has is that the more pulls $b$ a particular arm has, the lower its exploration term, and the more its likelihood of being picked is defined by its estimated reward $Q_t(A)$. To demonstrate this we can examine this function in <a href=""https://www.desmos.com/calculator"">desmos</a></div>"
+What are control problems ?	"<div>Control Problems describe a type of RL problem in which the aim is to maximize the total reward without having a fixed policy, that is the objective of the agent is to find the optimal policy (optimal decision making) which in turn yields the maximal reward given the environment of the agent.</div>
+<div>It differs from <strong>prediction tasks</strong> in which a policy is generally defined, that is an agent behaves following a predefined set of rules as a means of executing an action.</div>"
+How do we formally define an agent, environment, and aim in an RL task ?	"<ol>
+<li>
+<div><strong>Agent</strong> takes a certain action $A_t$ given the current state $S_t$ as defined by some <strong>policy</strong> which has either been predefined or developed, we state the policy as a function $\pi$</div>
+<div>$$
+\[\pi(A_t\mid S_t)\]&nbsp;$$</div>
+</li>
+<li>
+<div><strong>Environment</strong> returns a <strong>state, reward</strong> tuple</div>
+<div>$$&nbsp;\[(S_{t+1}, R_t)=p(S, R\mid A_t, S_t)\]&nbsp;$$</div>
+<div>This function represents the probability distribution over the next state and reward given the current action taken and the current state.</div>
+<div>It describes the <strong>state dynamics</strong> given the current information of the agent in the form of a probability distribution.</div>
+</li>
+<li>
+<div><strong>The aim</strong> is to maximize the <strong>cumulative reward</strong></div>
+<div>$$&nbsp;\[V^\pi(S_t)=\sum _{i=1}^\infty\gamma^iR_{t+i}\quad \gamma\in [0, 1)\]&nbsp;$$</div>
+<div>This function describes expected return when starting in a state $S_t$ , the goal is to maximize this function.</div>
+</li></ol>"
+What is a Q-learning algorithm and its main properties ?	"Q-Learning is a type of RL algorithm with 3 key properties : <span style=""font-weight:600"">model-free, off-policy, temporal difference<br></span><br><table>
+
+<tbody><tr>
+<th>property</th>
+<th>description</th>
+</tr>
+
+
+<tr>
+<td>model-free</td>
+<td>trail-and-error methods where an agent explores an environment and learns from outcomes of the actions directly</td>
+</tr>
+<tr>
+<td>off-policy</td>
+<td>its off policy because it approximates the optimal action-value function independent of the policy</td>
+</tr>
+<tr>
+<td>temporal difference</td>
+<td>this just means that predictions are re-evaluated after taking a step</td>
+</tr></tbody></table>"
+What is a Q-table ?	"<div>This is a table where on the</div>
+<ul>
+<li>x-axis we have the actions $\(A\in [A_1, A_2, \ldots, A_n]\)$</li>
+<li>y-axis we have the states $\(S\in [S_1, S_2, \ldots, S_m]\)$</li>
+</ul>
+<div>Each cell denoted by $Q(S, A)$ represents the reward estimate for this position.</div>"
+What is the action value function and what do its separate components mean ?	"<div>$$&nbsp;\[Q(S_t, A_t)\gets Q(S_t, A_t)+\alpha[R_{t+1}+\gamma\arg\max_A Q(S_{t+1}, A)-Q(S_t, A_t)]\]&nbsp;$$</div><div><br></div><div><div><strong>parameters</strong></div>
+<ul>
+<li>$\alpha\in [0, 1]$ defines the <strong>learning rate / step size</strong> if our algorithm
+<ul>
+<li>$\alpha\gets 0$ would mean that the agent learns nothing from new actions, since we are 0ing out the reward term</li>
+<li>$\alpha \gets 0$ would mean the agent <strong>ignores prior knowledge</strong> and only values the most recent information</li>
+</ul>
+</li>
+<li>$\gamma\in [0, 1]$ defines the <strong>discount factor</strong>
+<ul>
+<li>$\gamma\gets 0$  would mean the agent ignores future rewards and only gets the one from the immediate next timestep</li>
+<li>$\gamma\gets 1$ would mean the agent looks for high rewards in the long term</li>
+</ul>
+</li>
+</ul>
+<div><strong>reward term</strong></div>
+<ul>
+<li>$R_{t+1}$ defines the reward receive in the next time step</li>
+</ul>
+<div><strong>temporal difference term</strong></div>
+<ul>
+<li>
+<div>$\(\gamma\arg\max_A Q(S_{t+1}, A)-Q(S_t, A_t)\)$</div>
+<div>This term finds the action which yields the highest reward, and subtracts that from the reward given the current action.</div>
+<div><strong>The effect of this is</strong> that it acts as a <strong>learning signal</strong> so if the maximal reward action for the next state is less than that of the current state, we end up with a negative number which would pull down the reward term.</div>
+<div>On the other hand if the maximal reward for the next state is higher than that of the current state, then the reward of the current state is amplified as its an indicator we are moving in the right direction.</div>
+</li></ul></div>"
+What are the main types of learning setting and how are they different form one another / what are they most suited for ?	"<h3>Supervised Learning</h3>
+<div>Here we have <strong>input data</strong> with <strong>associated labels,</strong> and we use this input ↔ label relationship in classification tasks (predicting categoric values) or regression tasks (predicting numeric values).</div>
+<h3>Semi-supervised learning</h3>
+<div>Here we have <strong>input data</strong> with <strong><em>some</em> associated labels</strong>, the idea often being that you train a model on the data which is labelled, this allows you to make predictions and thus label the un-labelled portion, thus allowing you to train on an entire dataset.</div>
+<div>❗With the obvious caveat being that the model you used to label the un-labelled portion might not be as accurate as one trained on a larger dataset.</div>
+<h3>Unsupervised learning</h3>
+<div>Here was have <strong>input data</strong> with <strong><em>no</em> associated labels</strong>, so clearly we can only learn relations in the data through implicit means. That is to say through the repeated patterns in the data itself. A simple example of this being in the case of images regions of similar pixels.</div>
+<div>❗Here we could only cluster the data into regions that have similar explicit characteristics, but unless we knew more about the data we can’t necessarily understand these regions as being of some particular label.</div>"
+What are the key properties of an FCN?	<div>Refers to a neural network with generally 3 main types of layers, <strong>input layer</strong>, <strong>hidden layer</strong>, <strong>output layer</strong>. With a key property being that; in a forward manner; all nodes from the previous layer connect with all other nodes from the next layer, hence “fully connected”</div>
+What is linearity and why is it imporatant ?	"<div>Linearity describes the manner in which a specific model can fundamentally divide the feature space, so the space of the instances you wish to classify. A linear model; one without any non-linear activation functions; is as the name implies more or less a line, or in higher dimensions a hyperplane.</div>
+<div><strong>non-linearity</strong></div>
+<div>A key aspect of models in non-linearity, since in various instances we have a feature space that exhibits non-linear separability we need a way to learn a curved decision boundary for our model, non-linear activation functions allow for this.</div>"
+What are the 4 main types of non-linear activation functions, and their key properties ?	"<table>
+
+<tbody><tr>
+<th>activation function</th>
+<th>key properties</th>
+</tr>
+
+
+<tr>
+<td>sigmoid</td>
+<td>converts numbers to $n\in [0, 1]$ ; good as last layer of model; for multiclass problems use softmax</td>
+</tr>
+<tr>
+<td>tanh</td>
+<td>converts numbers into probabilities between $n\in [-1, 1]$ ; useful in zero-centered distribution and negative inputs ; vanishing gradient problem for large positive and large negative numbers</td>
+</tr>
+<tr>
+<td>ReLU</td>
+<td>fast computation ; zero gradient is a problem for negative input</td>
+</tr>
+<tr>
+<td>Leaky ReLU</td>
+<td>fast computation ; solves zero gradient issue</td>
+</tr></tbody></table>"
+What activation function is used when dealing with multiclass problems and why ?	"<h3>Softmax</h3>
+<div>For multiclass problems, that is problems where we want the probability of a class $i\in[1, k]$ , we define our class probability using the softmax activation function. Formally we express this as</div>
+<div>$$&nbsp;\[p(y=i\mid x, \theta)=\frac{\exp(\theta_i^\intercal x)}{\sum_{m=1}^k \exp(\theta_k ^\intercal x )}\]&nbsp;$$</div>
+<div>All this does is that it takes the numeric output for a particular node $i$ and divides this over the output of all other nodes.</div>"
+What are the main types of weight intiailization methods ?	"<table>
+
+<tbody><tr>
+<th>method</th>
+<th>description</th>
+</tr>
+
+
+<tr>
+<td>gaussian</td>
+<td>$\(\mathbf w\sim \mathcal N(0, \sigma^2)\)$ : the weights are sampled from the standard normal distribution</td>
+</tr>
+<tr>
+<td>xavier</td>
+<td>$\(\mathbf w \sim \mathcal N(0, \sqrt{\frac{1}{D}})\)$ : variance is defined as a function of the weight dimensions</td>
+</tr>
+<tr>
+<td>he</td>
+<td>$\(\mathbf w\sim \mathcal N(0, \sqrt{\frac{2}{D}})\)$ : same as for xavier with a slightly modified variance</td>
+</tr></tbody></table>"
+What is the abstract algorithm used to train a Neural Network ?	"<ol>
+<li>Initialize model weights and set learning objective (e.g. using gaussian initialization)</li>
+<li>Repeat training loop until stop criterion is met
+<ol>
+<li>Select the training data (sometimes in minibatches)</li>
+<li>Calculate the forward pass, that is, pass the inputs through the layers to get an output</li>
+<li>Calculate loss, so simply compute the difference between the network output and the target</li>
+<li>Backpropagation, compute the gradient of the loss function with respect to the different parameters to create update rules</li>
+</ol>
+</li></ol>"
+Describe the vanishin gradient problem and some cases where it occurs&nbsp;	The vanishing gradient problem describes an issue where the gradient decreases (or increases) exponentially which can; in the worst case; slow down stop the neural network from training. Specifically this happens with certain types of activation functions which do not account for it like the sigmoid activation function.
+How does ReLU solve the vanishing gradient problem ?	"<div>The rectified linear unit function solves this issue by having a gradient of 1 when the output is larger than 0 and 0 otherwise. What this means when we move backward through the network is that for nodes which do have an output &gt; 0 there is no vanishing gradient, since we are just multiplying 1.</div>
+<div>So the ReLU function relies on the heuristic that nodes which do output something &gt; 0 are updated and ones which don’t are not.</div>"
+"What are the most important things we can do to ""babysit"" a neural network ?"	"<table>
+
+<tbody><tr>
+<th>method</th>
+<th>description</th>
+</tr>
+
+
+<tr>
+<td>weight initialization</td>
+<td>As elaborated before there are different types of weight initialization methods depending on the choice of non-linear activation function.</td>
+</tr>
+<tr>
+<td>baseline</td>
+<td>Its common to have a baseline model which more or less just randomly guesses to compare your model to. You should establish that in the first round you get a loss comparable to this random model</td>
+</tr>
+<tr>
+<td>data preprocessing</td>
+<td>Different types of data-preprocessing techniques are common in machine learning. For example making sure the data is 0 centered and normalized</td>
+</tr>
+<tr>
+<td>hyperparameter optimization</td>
+<td>You will rarely get the best hyperparameter optimization on the first try. Random hyperparameter search is often a nice simple method of seeing which ones yield good results.</td>
+</tr>
+<tr>
+<td>regularizers</td>
+<td>Overfitting, so when your model does not generalize and instead fits too closely to your data can be mitigated through the use of regularizers which just refers to a collection of techniques that prevent overfitting. Intuitively all regularization means is to make something simpler, which is a heuristic shared by regularization methods.</td>
+</tr>
+<tr>
+<td>changing the batch size</td>
+<td>A larger batch size (number if input samples before we backpropagate) means that we obviously backpropagate less which in turn speeds up the computations.</td>
+</tr></tbody></table>"
+What are the main types of regularizers and their effect ?	"<div><strong>L1 + L2 regularizers</strong></div>
+<div>Both of these techniques add penalties to the loss function to discourage complex models, the difference is in the way the penalties are computed. If we define our original loss function as $\text{loss}_o$ then we compute the L1 and L2 loss as follows</div>
+<div>$$
+\[\text{loss}_{L1}=\text{loss}_o+\lambda \sum_{i=1}^n|w_i|\quad \text{loss}_{L2}=\text{loss}_o+\lambda \sum_{i=1}^nw_i^2\]&nbsp;$$</div>
+<div>$\lambda$  here is simply a scaling constant for the penalty term, generally $10^{-1}$ or $10^{-2}$</div><div><br></div>
+<div><strong>Dropout</strong></div>
+<div>The way dropout simplifies things is by ignoring (0ing out) a subset of neurons during training, which simulates training multiple neural network architectures to improve generalization.</div>
+<div>Usually defined in terms of a percentage, some key things to remember are</div>
+<table>
+
+<tbody><tr>
+<th>starting rate</th>
+<th>Its good to start with a smaller rate, something in the range of $i\in [20\%, 50\%]$</th>
+</tr>
+
+
+<tr>
+<td>too high or low</td>
+<td>If the % is too high you could lead to underfitting due to a too low model complexity, but conversely if the dropout is too low it could not be regularizing the network enough.<br><br></td>
+</tr>
+
+</tbody></table>
+<div><strong>Early stopping</strong></div>
+<div>The idea with early stopping is to simply train the model until the performance on the validation set no longer improves. Which just in practice means stopping the training once you no longer see an improvement in the models abilities.</div>"
+What are the key differences between FCNN and CNNs	"<div><strong>FCNN</strong></div>
+<ul>
+<li>are generally broadly applicable</li>
+<li>no assumptions need to be made about the input</li>
+</ul>
+<div><strong>CNN</strong></div>
+<ul>
+<li>better for images</li>
+<li>contain fewer weights than FCNN</li>
+<li>are good feature extractors</li></ul>"
+What is a filter ?	Intuitively a filter can be thought of as a method of removing certain unwanted parts of some source. In the context of machine learning filters are also known as kernels.
+What is a convolutional operation ?	A convolution is broadly defined as a mathematical operation on two functions, to produce a third function. Convolution operations can be described as “sliding” one function e.g. a filter, over another function e.g. an image, to produce a third function, in our case an image with certain things removed.
+What are some important types of filters ?	"<div>To become a little more concrete and actually look at different types of filters and their corresponding images they usually slide over.</div>
+<div>In terms of with filters we often mean 2d filters, and generally these modify the central pixel they are focused on as a functions of the pixels around this pixel.</div>
+<div><strong>Average filter</strong></div>
+<div>As the name implies here we define the central pixel as the average of the pixels around it, a common choice here might be a 3x3 filter/kernel. Where the central pixel, which we can call $p_c$ is simply the average of the pixel values around it.</div>
+<div><strong>Gaussian filter</strong></div>
+<div>Again as the name implies, here the central pixel instead of being an average of those around it is randomly sampled from a gaussian/normal distribution over the neighboring pixels. In simpler terms meaning that the central pixel of the distribution of neighboring values will likely end up looking somewhat like the average but via a probabilistic process.</div>"
+What is padding and stride ?	"<div>There are two key questions that arise, namely how do we answer the following two questions ?</div>
+<ul>
+<li>By <em>how much do we slide</em> our filter over the image ?</li>
+<li>What do we do when our filter <em>hits the edge</em> of our image ?</li></ul><br><div><strong>How much do we slide ?</strong></div><div>This is simply a pre-chosen value, you can think of it just as a tuple that defines the number of pixels we move our filter each iteration. So</div><div><br></div><div style=""display: inline !important;""><strong>What happens when we hit the border ?</strong></div><div>This is where padding comes in, which simply defines how much artificial border we add for the kernel to move into to compute the pixel values for the edges. Again its generally defined in terms of the x and y directions, for example</div><div><br></div>"
+What is a feature map ?	Feature map just referrers to the resulting image created from sliding the filter over the image. Using the above example with the above set parameters, aside from padding which we set to 0 we end up with the following
+What is the general structural principle followed with CNNs ?	An example structure can be seen below, we start with an image, then feed this through convolutional layers which generate feature maps that encode specific, well, features of this image, and then we flatten this to (usually) get some distribution over the classes from which we can derive the most likely class label, in our case 4
+What is pooling and how does it work ?	"<div>Pooling differentiates itself from convolutions in the fact that we do not have a kernel, we simply choose some simplification heuristic e.g. max or average, and the use this to “generalize” larger segments of an image.</div>
+<div><strong>Example - max and average pooling</strong></div>
+<div>Here the images are divided into 4x4 regions, for max pooling we denote this 4x4 region by the maximum pixel, and for average pooling by the average value of this region.</div>
+<div><strong>Key benefits</strong></div>
+<div>This operation is generally fast to compute.</div>
+<div>Its also translation invariant since local regions can have values in different positions within this region yet still have the same average or maximum.</div>
+<div><strong>Key downside</strong></div>
+<div>While the translation invariance to the features in the images for the pooled regions is beneficial in the sense that it generalizes certain common features it could also lead to a loss of spatial information because of this inherent fact that it doesn’t account for spatial variation in the pools, it simply aggregates them according to max or average.</div>
+<div><strong>Practical consideration</strong></div>
+<div>One practical thing to be aware of is that max pooling specifically gives better results for images with a black background and a white object.</div>"
+What is an autoencoder and how does it work?	"<div>Auto Encoders are neural nets who’s aim is to find a compressed representation that optimally reconstructs to the original input. An example can be seen below</div>
+<div>The basic idea is that we have a decoder, which is generally just a FCN to some middle layer which is also known as the latent space, or latent space encoding. From this we then have the decoder which produces an output.</div>
+<div><strong>Backpropagation</strong> happens like it would with most other FCNs, in that we compare the output to the target, in this case the input, and then backpropagate through the layers.</div>
+<div>The result of this process is that through the training process the model learns an efficient compression for the input image.</div>"
+What are some applications of autoencoders ?	"<table>
+
+<tbody><tr>
+<th>application</th>
+<th>description</th>
+</tr>
+
+
+<tr>
+<td>image inpainting</td>
+<td>Here we are training the model to find compressed representations for our training data, then using for example images with certain segments missing, the reconstruction process would then naturally fill in this missing data</td>
+</tr>
+<tr>
+<td>segmentation</td>
+<td>If we change the training outputs to be segmented inputs, then the network will learn to both compress the input images but also segment them. Which means that after the model is trained it will naturally find the optimally compressed segmented version of the image.</td>
+</tr></tbody></table>"
+What is a GAN and how does it work ?	"<div>GANs main purpose is to create an effective generator network which, given random noise, can create authentic pieces of data.</div>
+<div><strong>A broad overview</strong> of such a model can be seen below</div>
+<div>The idea being that the generator and discriminator are playing a zero-sum game where the discriminator is iteratively trained to producer images which “look” like what’s coming from the training set, and the discriminator is in turned trained to more effectively detect the data coming from the training set.</div>
+<div><strong>The generator</strong></div>
+<div>Focusing on the generator specifically, once it is trained you essentially have a network which can produces images based on some random input that look like they would’ve come from the training set.</div>"
+What is a recurrent neural network and its main pros and cons ?	"<div>RNNs are effective for learning patterns from sequential data, especially sequential dependencies between parts of a sequence.</div>
+<div><strong>Pros</strong></div>
+<ul>
+<li>processing of repeated patterns through shared NN blocks</li>
+<li>learning of sequential dependencies by including outputs from previous blocks</li>
+<li>can deal with variable lengths of sequences</li>
+<li>can use backpropagation for learning</li>
+</ul>
+<div><strong>Cons</strong></div>
+<ul>
+<li>learning is sometimes not trivial</li>
+<li>learning long-term dependencies is hard (poor memory basically)</li></ul>"
+What is Neurevolution ?	Neuroevolution is the application of evolutionary algorithms to generate artificial neural networks, parameters and rules to find an optimal network structure.
+What are the 3 main types of Neurevolution and their key properties ?	"<div>There are 3 main types of Neuroevolution, these being <strong>direct encoding, indirect/developmental encoding</strong>, <strong>evolving plastic ANNs</strong></div>
+<div><strong>Direct Encoding</strong></div>
+<div><strong>One-to-one mapping</strong> from the genotype to the phenotype</div>
+<div><strong>Weights/topology</strong> can be optimized via the crossover and mutation strategies</div>
+<div><strong>Evolutionary operators</strong> include things like</div>
+<ul>
+<li>weight perturbation (weight)</li>
+<li>node insertion/deletion (topology)</li>
+<li>connection insertion/deletion (topology)</li>
+</ul>
+<div><strong>Large search space</strong> due to model complexity and other factors</div>
+<div><strong>Indirect/Developmental Encoding</strong></div>
+<div><strong>Genotype encodes rules</strong> to specify how the networks are constructed (blueprint)</div>
+<div><strong>No one-to-one mapping</strong> between genotype and phenotype</div>
+<div><strong>Biologically plausible</strong> though not the most complex</div>
+<div><strong>Evolving Plastic ANNs</strong></div>
+<div><strong>Genotype encodes rules</strong> to specify how individuals <strong>learn during their lifetime</strong></div>
+<div><strong>Lifetime learning</strong> means that networks can change configuration during their lifetime</div>
+<div><strong>Phenotypic plasticity</strong> means that the same genotype can produce different phenotypes based on the interaction with the environment</div>
+<div><strong>Biologically plausible</strong> high level of learning</div>"
+What is direct encoding ?	"<h3>Direct Encoding</h3>
+<div>There are 3 main ways to encoding a neural network in Direct encoding</div>
+<div><strong>Topology and Weight encoding</strong></div>
+<div>In this case we have an encoding for the weights and the actual structure of the network. To encode the structure there are different approaches, but an adjacency matrix is one nice example.</div>
+<div><strong>Weight encoding</strong></div>
+<div>Here we encode just the weights and everything else remains constant, generally its simpler to implement a bit more limited in its adaptability.</div>
+<div><strong>Topology encoding (with Backpropagation)</strong></div>
+<div>We can also just alter the topology, this does not change the weights. Since we would reasonably want to adapt these as well we can simply employ backpropagation.</div>
+<div>This leverages the strengths of both evolutionary algorithms and gradient-based learning methods, potentially leading to more efficient learning.</div>"
+What is indirect/developmental encoding ?	"<div>There are some key techniques used in indirect/developmental encoding. These being namely: <strong>cellular encoding</strong>, <strong>grammar based rewriting rules</strong>, <strong>evolving compressed weights</strong>, <strong>Hyper-NEAT</strong>, and <strong>Axonal growth model</strong></div>
+<div><strong>Cellular encoding</strong></div>
+<div>In cellular encoding we construct the neural network based on developmental rules that simulate (are based on) biological cell processes. These rules generally define how the nodes (cells) divide, differentiate, and connect to form the final neural network.</div>
+<div><strong>Grammar based rewriting rules</strong></div>
+<div>Here the neural network is developed through a series of rewriting rules where we generally start of with some symbol, e.g. <code>S</code> representing the most fundamental abstract rule. We then apply different rules to expand or essentially define the neural network. This process of rewriting from abstract to more concrete after some number of cycles creates some encoded representation of a network i.e. the phenotype which we can then decode into a genotype AKA our neural net.</div>
+<div><strong>Axonal growth model</strong></div>
+<div>In this model the neural network develops and adapts to the specific environment its in.</div>
+<div><strong>Evolving compressed weights</strong></div>
+<div>We can create a compressed representation of the weight matrices for neural networks, this naturally allows reduces the search space to find an effective model.</div>
+<div><strong>Hyper-NEAT</strong></div>
+<div>Similar to the previous methods Hyper-NEAT generates a neural network over time. It leverages specific patterns in the data, also called geometric regularities to create more efficient and effective neural networks.</div>"
+What is lifetime learning ?	"<div>Lifetime Learning refers to the technique where instead of having individuals be static during their lifetime, that is, when they are being evaluated, information from the evaluation is used to modify the individuals before they are crossed over and mutated.</div>
+<div>In the case of Neuroevolution this could for example be that we evaluate a neural network for 1000 time steps; this being its lifetime; and in the process also use something like gradient descent to optimize the network.</div>
+<div>This way the individual would learn during its lifetime and be able to pass on this learned knowledge, as opposed to simply being statically evaluated and crossed over.</div>"
+What is hebbian plasticity ?	<div>Hebbian plasticity refers to the <strong>strengthening</strong> of a presynaptic input onto a postsynaptic neuron when both pre- and postsynaptic neurons are coactive.</div>
+What is NAS ?	<div>NAS broadly defines the different techniques used for the design of neural networks. One example discussed in the course being obviously the application of Evolutionary Algorithms for Neuroevolution. Though the other more traditional search methods are also applicable here, things like Hill-climbing, Multi-objective search, and Bayesian Optimization.</div>
+What are the main requirements and conditions of NEAT ?	"<table>
+
+<tbody><tr>
+<th>req./cond.</th>
+<th>description</th>
+</tr>
+
+
+<tr>
+<td>encoding</td>
+<td>we need to use an appropriate encoding method, as we want to search for both the topology and weight we naturally need to encode both for whichever search method we want to apply</td>
+</tr>
+<tr>
+<td>EA methods</td>
+<td>if we choose to apply evolutionary algorithms for the search strategy then we need use appropriate mutation and crossover methods</td>
+</tr>
+<tr>
+<td>neural network growth</td>
+<td>its important to be aware of the fact that because we are altering the topology of the network it can grow during the training process</td>
+</tr>
+<tr>
+<td>speciation</td>
+<td>to maintain diversity its good to do evolutionary operators within species, this prevents premature convergence and maintains a rich pool of diverse solutions</td>
+</tr></tbody></table>"
